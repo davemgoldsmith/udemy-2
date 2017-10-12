@@ -10,6 +10,7 @@ public class Block extends Rectangle {
 	Image pic;
 	int dx = 3;
 	int dy = -3;
+	double velX = 0;
 	Rectangle left;
 	Rectangle right;
 	boolean destroyed = false;

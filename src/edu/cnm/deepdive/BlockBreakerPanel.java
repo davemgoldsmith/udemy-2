@@ -60,6 +60,16 @@ public class BlockBreakerPanel extends JPanel implements KeyListener{
 	}
 		
 	public void update(){
+		
+		paddle.x += paddle.velX;
+		if(paddle.x <= 0){
+			paddle.x = 0;
+		}
+		if(paddle.x >= getWidth() - paddle.width){
+			paddle.x = getWidth() - paddle.width;
+		}
+
+		
 		for(Block p : powerup){
 			p.y += 1;
 			if(p.intersects(paddle) && !p.destroyed){
@@ -69,12 +79,19 @@ public class BlockBreakerPanel extends JPanel implements KeyListener{
 		}
 		for(Block ba : ball){
 			ba.x += ba.dx;
+			Random random = new Random();
 			if(ba.x > (getWidth()-size) && ba.dx > 0 || ba.x < 0){
 				ba.dx *= -1;
 			}
-			if(ba.y < 0 || ba.intersects(paddle)){
+			if(ba.y < 0){
 				ba.dy *= -1;
 			}
+			if(ba.intersects(paddle)){
+				ba.dy *= -1;
+				ba.dx = paddle.velX < 0 ? - (random.nextInt(7) + 1) : random.nextInt(7) + 1;
+			}
+			
+
 			ba.y += ba.dy;
 			for(Block b : blocks){
 				if((b.left.intersects(ba) || b.right.intersects(ba)) && !b.destroyed){
@@ -111,17 +128,22 @@ public class BlockBreakerPanel extends JPanel implements KeyListener{
 		thread = new Thread(animate);
 		thread.start();
 	}
-	if (e.getKeyCode() == KeyEvent.VK_LEFT && paddle.x > 0){
-		paddle.x -= 15;	
+	if (e.getKeyCode() == KeyEvent.VK_LEFT){
+		paddle.velX = -5;
 		}
-	if (e.getKeyCode() == KeyEvent.VK_RIGHT && paddle.x < (getWidth() - paddle.width)){
-		paddle.x += 15;	
+	if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+		paddle.velX = 5;	
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
+		if (e.getKeyCode() == KeyEvent.VK_LEFT){
+			paddle.velX = 0;
+			}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+			paddle.velX = 0;	
+			}
 	
 	}
 
